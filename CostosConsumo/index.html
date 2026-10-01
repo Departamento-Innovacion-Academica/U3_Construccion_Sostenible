@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafíos de Eficiencia Energética</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #060d0a;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #0a291b 0%, #040806 70%);
+            --glass-card: rgba(10, 25, 18, 0.45);
+            --glass-border: rgba(16, 185, 129, 0.25);
+            --glass-hover-border: rgba(52, 211, 153, 0.6);
+            --text-primary: #f0fdf4;
+            --text-secondary: #9ca3af;
+            --accent: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.35);
+            --modal-bg: rgba(6, 18, 12, 0.88);
+            --modal-card: rgba(12, 32, 23, 0.75);
+            --btn-bg: rgba(16, 185, 129, 0.12);
+            --btn-hover: rgba(16, 185, 129, 0.28);
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.light-theme {
+            --bg-base: #f0fdf4;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #d1fae5 0%, #e6f4ea 70%);
+            --glass-card: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(16, 185, 129, 0.3);
+            --glass-hover-border: rgba(16, 185, 129, 0.7);
+            --text-primary: #064e3b;
+            --text-secondary: #4b5563;
+            --accent: #059669;
+            --accent-glow: rgba(5, 150, 105, 0.25);
+            --modal-bg: rgba(240, 253, 244, 0.85);
+            --modal-card: rgba(255, 255, 255, 0.85);
+            --btn-bg: rgba(5, 150, 105, 0.1);
+            --btn-hover: rgba(5, 150, 105, 0.22);
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: var(--bg-gradient);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 90px 20px 50px;
+            box-sizing: border-box;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* Controls */
+        .controls-container {
+            position: fixed;
+            top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 20;
+        }
+
+        .instruction {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            padding: 10px 22px;
+            border-radius: 30px;
+            color: var(--accent);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle-btn {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            color: var(--accent);
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--glass-hover-border);
+            box-shadow: 0 0 20px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Layout Grid */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        @media (max-width: 900px) {
+            .grid-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .grid-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Compact Glass Cards */
+        .card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            min-height: 160px;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.6;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--glass-hover-border);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--accent-glow);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.35;
+        }
+
+        .card .excerpt {
+            font-size: 0.82rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card .btn-open {
+            margin-top: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 12px;
+            background: var(--btn-bg);
+            transition: var(--transition);
+        }
+
+        .card:hover .btn-open {
+            background: var(--btn-hover);
+            transform: translateX(3px);
+        }
+
+        /* Modal Overlay & Card */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--modal-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 100;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--modal-card);
+            border: 1px solid var(--glass-hover-border);
+            border-radius: 24px;
+            max-width: 620px;
+            width: 100%;
+            max-height: 82vh;
+            overflow-y: auto;
+            padding: 35px 30px;
+            box-sizing: border-box;
+            position: relative;
+            transform: scale(0.92) translateY(10px);
+            transition: var(--transition);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--btn-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--accent);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--accent);
+            color: #ffffff;
+            transform: rotate(90deg);
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .modal-content p {
+            font-size: 0.92rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="controls-container">
+        <div class="instruction">Haga clic en las tarjetas para ampliar la información</div>
+        <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">
+            <span>🌙</span> Modo Oscuro
+        </button>
+    </div>
+
+    <div class="grid-cards">
+
+        <!-- Card 1 -->
+        <div class="card" onclick="openModal('modal-1')">
+            <div>
+                <h3>Costos iniciales y modelo de incentivos</h3>
+                <p class="excerpt">El mayor obstáculo percibido es la inversión inicial frente a la construcción
+                    convencional.</p>
+            </div>
+            <div class="btn-open">Ver detalle ↗</div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card" onclick="openModal('modal-2')">
+            <div>
+                <h3>Brechas técnicas y capacidad profesional</h3>
+                <p class="excerpt">El sector presenta déficits en capacitación en eficiencia energética y diseño
+                    bioclimático.</p>
+            </div>
+            <div class="btn-open">Ver detalle ↗</div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card" onclick="openModal('modal-3')">
+            <div>
+                <h3>Disponibilidad de materiales y tecnologías</h3>
+                <p class="excerpt">La oferta de ciertos componentes de alta prestación sigue siendo limitada o de alto
+                    costo.</p>
+            </div>
+            <div class="btn-open">Ver detalle ↗</div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card" onclick="openModal('modal-4')">
+            <div>
+                <h3>Cultura organizacional y resistencia al cambio</h3>
+                <p class="excerpt">Prevalece una gestión basada en costos de corto plazo y aversión al riesgo
+                    tecnológico.</p>
+            </div>
+            <div class="btn-open">Ver detalle ↗</div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card" onclick="openModal('modal-5')">
+            <div>
+                <h3>Cumplimiento normativo y medición de consumos</h3>
+                <p class="excerpt">Su aplicación depende de la verificación municipal y de sistemas de medición
+                    inteligente.</p>
+            </div>
+            <div class="btn-open">Ver detalle ↗</div>
+        </div>
+
+    </div>
+
+    <!-- Modal 1 -->
+    <div class="modal-overlay" id="modal-1" onclick="closeModalOnOverlay(event, 'modal-1')">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('modal-1')">✕</button>
+            <h3>Costos iniciales y modelo de incentivos:</h3>
+            <p>El mayor obstáculo percibido para la adopción de medidas de eficiencia energética es la mayor inversión
+                inicial respecto a la construcción convencional. Aunque el análisis de ciclo de vida demuestra que esta
+                inversión se recupera en plazos razonables, el mercado colombiano de la construcción opera
+                predominantemente con criterios de costo de primera inversión, sin considerar los costos de operación en
+                la toma de decisiones de compra o arrendamiento. La separación entre quien invierte, el promotor o
+                constructor, y quien paga la energía, el propietario o inquilino, crea el denominado dilema del
+                propietario-inquilino (split incentive), que desincentiva las inversiones del promotor en eficiencia
+                energética que benefician principalmente al futuro ocupante.</p>
+        </div>
+    </div>
+
+    <!-- Modal 2 -->
+    <div class="modal-overlay" id="modal-2" onclick="closeModalOnOverlay(event, 'modal-2')">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('modal-2')">✕</button>
+            <h3>Brechas técnicas y capacidad profesional:</h3>
+            <p>El sector de la construcción colombiano presenta déficits significativos en capacitación técnica en
+                eficiencia energética, diseño bioclimático, simulación energética y gestión de sistemas activos
+                eficientes. La mayoría de los programas de formación de arquitectos e ingenieros civiles no integran de
+                manera suficiente estos contenidos, generando egresados con escasa preparación para diseñar y gestionar
+                edificaciones de alta prestación energética. Esta brecha limita la capacidad de las organizaciones para
+                implementar proyectos ambiciosos de eficiencia y genera dependencia de consultoría especializada
+                extranjera (CCCS, 2023).</p>
+        </div>
+    </div>
+
+    <!-- Modal 3 -->
+    <div class="modal-overlay" id="modal-3" onclick="closeModalOnOverlay(event, 'modal-3')">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('modal-3')">✕</button>
+            <h3>Disponibilidad de materiales y tecnologías:</h3>
+            <p>Aunque el mercado colombiano ha mejorado su oferta de materiales de aislamiento, vidrios de control solar
+                y equipos de climatización eficiente en la última década, la disponibilidad de ciertos productos de alta
+                prestación, como vidrios triples, sistemas de ventilación con recuperación de calor o paneles sándwich
+                de alto desempeño, sigue siendo limitada o implica importación con sobrecostos importantes. El
+                desarrollo de proveedores locales de materiales de construcción eficientes, apoyado por incentivos a la
+                innovación productiva, es una condición necesaria para escalar la eficiencia energética en el mercado de
+                construcción masiva.</p>
+        </div>
+    </div>
+
+    <!-- Modal 4 -->
+    <div class="modal-overlay" id="modal-4" onclick="closeModalOnOverlay(event, 'modal-4')">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('modal-4')">✕</button>
+            <h3>Cultura organizacional y resistencia al cambio:</h3>
+            <p>Las organizaciones del sector construcción colombiano presentan frecuentemente una cultura de gestión
+                basada en el control de costos de corto plazo, la aversión al riesgo tecnológico y la replicación de
+                soluciones probadas, lo que dificulta la adopción de enfoques innovadores como el diseño integrado de
+                proyectos, la simulación energética en fases tempranas o los contratos de rendimiento energético. La
+                transformación de esta cultura organizacional requiere liderazgo directivo comprometido, capacitación
+                continua del personal técnico y la creación de casos de éxito locales verificados que demuestren la
+                viabilidad y rentabilidad de las inversiones en eficiencia.</p>
+        </div>
+    </div>
+
+    <!-- Modal 5 -->
+    <div class="modal-overlay" id="modal-5" onclick="closeModalOnOverlay(event, 'modal-5')">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('modal-5')">✕</button>
+            <h3>Cumplimiento normativo y medición de consumos:</h3>
+            <p>La Resolución 0549 de 2015 del MVCT establece requisitos mínimos de eficiencia energética para
+                edificaciones nuevas, pero su aplicación efectiva depende de la capacidad de las administraciones
+                municipales para verificar el cumplimiento durante los procesos de licenciamiento y de la disponibilidad
+                de sistemas de medición de consumos energéticos en las edificaciones. La ausencia de contadores
+                inteligentes, la falta de reportes públicos de consumo energético por edificación y la inexistencia de
+                un sistema nacional de certificación energética de edificaciones, a diferencia de la calificación
+                energética obligatoria en la Unión Europea, limitan la transparencia del mercado y dificultan la
+                valoración del desempeño energético como atributo comercial de los inmuebles (UPME, 2022).</p>
+        </div>
+    </div>
+
+    <script>
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function closeModalOnOverlay(event, id) {
+            if (event.target === document.getElementById(id)) {
+                closeModal(id);
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeBtn');
+            body.classList.toggle('light-theme');
+
+            if (body.classList.contains('light-theme')) {
+                btn.innerHTML = '<span>☀️</span> Modo Claro';
+            } else {
+                btn.innerHTML = '<span>🌙</span> Modo Oscuro';
+            }
+        }
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
