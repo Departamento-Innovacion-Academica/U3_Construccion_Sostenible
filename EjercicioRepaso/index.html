@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso: Eficiencia Energética y Diseño Bioclimático</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Librería de Confeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #054C50; 
+            --primary-dark: #033235; 
+            --primary-light: #e6f0f1; 
+            --accent-border: #b8d4d6;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-size: 17px;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f0f4f4 0%, #dbe7e9 100%);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #main-container {
+            width: 95%;
+            max-width: 1000px;
+            height: 870px; 
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(5, 76, 80, 0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2.5rem 3.5rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+
+        .text-custom { color: var(--primary); }
+        .bg-custom { background-color: var(--primary); }
+        .border-custom { border-color: var(--primary); }
+
+        .btn-action {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 3.5rem;
+            border-radius: 99px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+        .btn-action:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(5, 76, 80, 0.3);
+        }
+
+        .option-card {
+            transition: all 0.2s ease;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.65);
+            cursor: pointer;
+        }
+        
+        .option-card.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .option-card.locked { pointer-events: none; }
+
+        .circle-bar { 
+            fill: none; 
+            stroke: var(--primary); 
+            stroke-width: 10; 
+            stroke-linecap: round; 
+            transition: stroke-dashoffset 1.5s ease-out;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="main-container">
+        
+        <!-- PANTALLA INICIAL -->
+        <div id="screen-start" class="scroll-content flex flex-col items-center justify-center text-center animate__animated animate__fadeIn">
+            <span class="px-4 py-1.5 bg-[#e6f0f1] text-custom font-bold text-xs uppercase tracking-widest rounded-full mb-4">Evaluación Interactiva</span>
+            <h1 class="text-4xl font-bold text-custom mb-3 leading-tight">Eficiencia Energética y Diseño Bioclimático</h1>
+            <p class="text-2xl mb-5 text-slate-700 font-semibold">Repaso Normativo y Estrategias Pasivas</p>
+            <p class="mb-10 max-w-2xl text-slate-600 text-lg">Pon a prueba tus conocimientos sobre parámetros de desempeño energético, estrategias de diseño bioclimático, incentivos de la Ley 1715, ISO 50001 y la Resolución 0549.</p>
+            <button onclick="startQuiz()" class="btn-action text-xl shadow-lg">INICIAR REPASO</button>
+        </div>
+
+        <!-- PANTALLA DE CUESTIONARIO -->
+        <div id="screen-quiz" class="hidden flex flex-col h-full">
+            <div class="px-14 pt-8 flex justify-between items-center z-10">
+                <span id="q-number" class="font-bold text-custom text-sm tracking-widest uppercase"></span>
+                <div class="w-48 h-2 bg-teal-100/70 rounded-full overflow-hidden backdrop-blur-sm">
+                    <div id="progress-fill" class="h-full bg-custom transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="scroll-content animate__animated animate__fadeIn" id="quiz-body">
+                <p id="q-instruction" class="text-custom font-bold italic mb-2 text-base"></p>
+                
+                <div id="question-text-container" class="mb-6 leading-relaxed text-slate-800">
+                    <h2 id="q-text" class="text-lg font-semibold leading-snug text-slate-800 border-l-4 border-[#054C50] pl-4 py-1 bg-white/50 rounded-r-lg"></h2>
+                </div>
+
+                <!-- CONTENEDOR DE OPCIONES -->
+                <div id="options-container" class="space-y-3"></div>
+
+                <div id="warning-box" class="hidden mt-4 p-4 rounded-xl bg-amber-50/90 border border-amber-200 text-amber-800 font-medium text-sm flex items-center justify-center animate__animated animate__shakeX">
+                    ⚠️ Por favor, selecciona una respuesta antes de continuar.
+                </div>
+
+                <div id="feedback-box" class="hidden mt-6 p-5 rounded-2xl border-2 animate__animated animate__fadeInUp text-base bg-white/85 backdrop-blur-md">
+                    <p id="feedback-title" class="font-bold text-lg mb-1"></p>
+                    <div id="feedback-body" class="leading-relaxed text-slate-700"></div>
+                    <button id="btn-continue" onclick="nextStep()" class="mt-4 bg-slate-800 text-white px-8 py-2 rounded-xl hover:bg-black transition-all font-bold text-sm">Continuar</button>
+                </div>
+
+                <button id="btn-validate" onclick="validateAnswer()" class="btn-action w-full mt-6 shadow-xl text-lg">Validar Respuesta</button>
+            </div>
+        </div>
+
+        <!-- PANTALLA DE RESULTADOS -->
+        <div id="screen-results" class="hidden scroll-content flex flex-col items-center">
+            <h2 class="text-4xl font-bold mb-2 text-custom text-center">Repaso Finalizado</h2>
+            
+            <div class="flex flex-col items-center justify-center my-4">
+                <div class="relative flex items-center justify-center">
+                    <svg class="w-56 h-56 -rotate-90">
+                        <circle cx="112" cy="112" r="95" stroke="rgba(255,255,255,0.6)" stroke-width="10" fill="none"></circle>
+                        <circle id="final-circle" cx="112" cy="112" r="95" class="circle-bar" stroke-dasharray="596" stroke-dashoffset="596"></circle>
+                    </svg>
+                    <div class="absolute text-5xl font-black text-slate-800"><span id="result-percent">0</span>%</div>
+                </div>
+            </div>
+
+            <p id="result-score" class="text-xl font-bold mb-4 text-slate-700 text-center"></p>
+            <div id="result-msg" class="w-full max-w-2xl mb-6 p-5 bg-white/75 rounded-2xl italic text-slate-700 text-base text-center shadow-sm border border-white"></div>
+            
+            <button onclick="location.reload()" class="btn-action mb-8">Reiniciar Repaso</button>
+
+            <div class="w-full max-w-3xl border-t border-teal-100 pt-8 mt-4 text-left">
+                <h3 class="text-2xl font-bold text-custom mb-6 text-center">Revisión de respuestas</h3>
+                <div id="summary-cards" class="space-y-6"></div>
+            </div>
+
+            <button onclick="location.reload()" class="btn-action mt-10 mb-6">Reiniciar Repaso</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                type: "ms",
+                instruction: "Seleccione la respuesta correcta",
+                question: "1. ¿Qué parámetro se utiliza para comparar el desempeño energético entre edificaciones de similar uso y área, y medir la evolución de sus mejoras a lo largo del tiempo?",
+                options: [
+                    {t: "El coeficiente de transmitancia térmica (valor U) de la envolvente.", c: false},
+                    {t: "La Intensidad de Uso Energético (EUI), expresada en kWh/m²·año.", c: true},
+                    {t: "El factor solar de los cerramientos vidriados.", c: false},
+                    {t: "La potencia instalada de los sistemas de climatización en kW.", c: false}
+                ],
+                feedback: "El EUI mide el consumo anual de energía por unidad de área y permite comparar el desempeño energético entre edificaciones. A diferencia del valor U, el factor solar y la potencia instalada, refleja el consumo energético global del edificio (IFC, 2019)."
+            },
+            {
+                type: "ms",
+                instruction: "Seleccione la respuesta correcta",
+                question: "2. En el marco del diseño bioclimático para edificaciones en zonas de clima cálido y húmedo como el litoral Caribe colombiano, ¿cuál de las siguientes estrategias pasivas es generalmente la más efectiva para mantener el confort térmico sin climatización mecánica?",
+                options: [
+                    {t: "Incorporar grandes masas térmicas en muros y losas para almacenar calor durante el día.", c: false},
+                    {t: "Instalar aislamiento térmico de alta densidad en toda la envolvente para bloquear el calor exterior.", c: false},
+                    {t: "Diseñar ventilación natural cruzada aprovechando los vientos dominantes y orientar las fachadas de menor área hacia el este y el oeste.", c: true},
+                    {t: "Maximizar las superficies vidriadas en todas las fachadas para aprovechar la luz natural y el efecto de invernadero.", c: false}
+                ],
+                feedback: "En climas cálidos húmedos, la ventilación natural cruzada favorece la disipación del calor y mejora el confort térmico. Su efectividad aumenta al aprovechar los vientos dominantes y controlar la radiación solar mediante protección en las fachadas más expuestas (Givoni, 1994; Lechner, 2015)."
+            },
+            {
+                type: "ms",
+                instruction: "Seleccione la respuesta correcta",
+                question: "3. ¿Cuál de los siguientes mecanismos establecidos por la Ley 1715 de 2014 beneficia directamente a una empresa del sector construcción que instala un sistema solar fotovoltaico en un proyecto comercial en Colombia?",
+                options: [
+                    {t: "Exención total del impuesto predial del inmueble durante diez años.", c: false},
+                    {t: "Deducción del 50 % del valor de la inversión en la declaración de renta y exclusión del IVA en la adquisición de equipos.", c: true},
+                    {t: "Subsidio directo equivalente al 30 % del valor del sistema a cargo del Ministerio de Minas y Energía.", c: false},
+                    {t: "Obligación para la empresa distribuidora de energía de comprar el 100 % de la generación excedente a precio de bolsa.", c: false}
+                ],
+                feedback: "La Ley 1715 de 2014 contempla incentivos tributarios para proyectos de energías renovables, como deducciones en renta, exclusión de IVA y exención arancelaria. No establece subsidios directos ni exenciones prediales, y la remuneración de excedentes se rige por la regulación de la CREG (Ley 1715, 2014; UPME, 2022)."
+            },
+            {
+                type: "ms",
+                instruction: "Seleccione la respuesta correcta",
+                question: "4. La norma ISO 50001:2018 tiene como propósito principal:",
+                options: [
+                    {t: "Certificar el desempeño energético de edificaciones individuales mediante una etiqueta energética de A a G.", c: false},
+                    {t: "Proporcionar un marco de sistema de gestión de la energía para organizaciones que buscan mejorar su desempeño energético de manera continua y sistemática.", c: true},
+                    {t: "Establecer los valores máximos de transmitancia térmica permitidos para edificaciones comerciales en países industrializados.", c: false},
+                    {t: "Regular los requisitos mínimos de eficiencia de equipos de climatización para obtener el sello ENERGY STAR.", c: false}
+                ],
+                feedback: "ISO 50001:2018 establece un sistema de gestión de la energía basado en el ciclo PHVA y aplicable a cualquier organización. No certifica edificaciones ni define requisitos técnicos de diseño, como valores U mínimos, y es independiente del programa ENERGY STAR (ISO, 2018)."
+            },
+            {
+                type: "vf",
+                instruction: "Seleccione Verdadero o Falso",
+                question: "5. Los puentes térmicos en la envolvente de un edificio son irrelevantes desde el punto de vista del desempeño energético en climas tropicales como el colombiano, ya que solo afectan a edificaciones en climas fríos.",
+                options: [
+                    {t: "Verdadero", c: false},
+                    {t: "Falso", c: true}
+                ],
+                feedback: "Los puentes térmicos afectan el desempeño de la envolvente en cualquier clima. En climas cálidos aumentan las ganancias de calor y la demanda de refrigeración y, en condiciones húmedas, pueden favorecer condensaciones y patologías constructivas. (ASHRAE, 2021; Kibert, 2016)."
+            },
+            {
+                type: "vf",
+                instruction: "Seleccione Verdadero o Falso",
+                question: "6. El análisis de costo de ciclo de vida (LCCA) es la herramienta financiera más adecuada para evaluar inversiones en eficiencia energética porque considera tanto la inversión inicial como los ahorros operacionales y los costos de mantenimiento a lo largo del horizonte de análisis del proyecto.",
+                options: [
+                    {t: "Verdadero", c: true},
+                    {t: "Falso", c: false}
+                ],
+                feedback: "El LCCA evalúa los costos durante todo el ciclo de vida del proyecto, incluyendo inversión, operación, mantenimiento y fin de vida. Esto permite identificar alternativas que, aunque tengan mayor costo inicial, resulten más económicas a largo plazo (IFC, 2019; IEA, 2023)."
+            },
+            {
+                type: "vf",
+                instruction: "Seleccione Verdadero o Falso",
+                question: "7. En Colombia, la Resolución 0549 de 2015 del Ministerio de Vivienda, Ciudad y Territorio establece metas de ahorro de agua y energía para todas las edificaciones nuevas, con umbrales diferenciados según la zona climática y el uso del edificio.",
+                options: [
+                    {t: "Verdadero", c: true},
+                    {t: "Falso", c: false}
+                ],
+                feedback: "La Resolución 0549 de 2015 establece requisitos mínimos de ahorro de agua y energía para edificaciones en Colombia, diferenciados según la zona climática y el tipo de uso, constituyéndose en un referente normativo para la construcción sostenible (Resolución 0549, 2015)."
+            }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        const totalPoints = quizData.length; 
+
+        function startQuiz() {
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = quizData[currentIdx];
+            
+            document.getElementById('q-number').innerText = `PREGUNTA ${currentIdx + 1}/${quizData.length}`;
+            document.getElementById('progress-fill').style.width = `${((currentIdx + 1)/quizData.length)*100}%`;
+            document.getElementById('q-instruction').innerText = q.instruction;
+            document.getElementById('feedback-box').classList.add('hidden');
+            document.getElementById('warning-box').classList.add('hidden');
+            document.getElementById('btn-validate').classList.remove('hidden');
+
+            const optContainer = document.getElementById('options-container');
+            document.getElementById('q-text').innerText = q.question;
+            setupSelectionOptions(q, optContainer);
+        }
+
+        function setupSelectionOptions(q, container) {
+            container.innerHTML = '';
+            q.options.forEach((opt, i) => {
+                const d = document.createElement('div');
+                d.className = "option-card flex items-center p-4 rounded-xl mb-2 text-base";
+                d.innerHTML = `
+                    <input type="radio" name="ans" id="o${i}" value="${i}" class="w-5 h-5 accent-[#054C50]">
+                    <label for="o${i}" class="ml-4 w-full cursor-pointer font-medium text-slate-700">${opt.t}</label>
+                `;
+                d.onclick = () => {
+                    document.getElementById('warning-box').classList.add('hidden');
+                    document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
+                    d.classList.add('selected');
+                    d.querySelector('input').checked = true;
+                };
+                container.appendChild(d);
+            });
+        }
+
+        function validateAnswer() {
+            const q = quizData[currentIdx];
+            const selectedInput = document.querySelector('input[name="ans"]:checked');
+            
+            if (!selectedInput) { 
+                document.getElementById('warning-box').classList.remove('hidden'); 
+                return; 
+            }
+
+            document.getElementById('warning-box').classList.add('hidden');
+            const chosenVal = parseInt(selectedInput.value);
+            q.userAnswer = chosenVal; 
+
+            const isCorrect = q.options[chosenVal].c;
+            if (isCorrect) {
+                score += 1;
+            }
+            document.querySelectorAll('.option-card').forEach(el => el.classList.add('locked'));
+
+            const fBox = document.getElementById('feedback-box');
+            fBox.classList.remove('hidden', 'border-green-300', 'border-red-300');
+            document.getElementById('btn-validate').classList.add('hidden');
+
+            const fTitle = document.getElementById('feedback-title');
+            if (isCorrect) {
+                fTitle.innerText = "¡Correcto!";
+                fTitle.className = "font-bold text-lg text-green-700";
+                fBox.classList.add('border-green-300');
+            } else {
+                fTitle.innerText = "Incorrecto";
+                fTitle.className = "font-bold text-lg text-red-700";
+                fBox.classList.add('border-red-300');
+            }
+            document.getElementById('feedback-body').innerHTML = `<strong>Realimentación:</strong> ${q.feedback}`;
+        }
+
+        function nextStep() {
+            currentIdx++;
+            if (currentIdx < quizData.length) renderQuestion();
+            else showResults();
+        }
+
+        function showResults() {
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-results').classList.remove('hidden');
+            
+            const percent = Math.round((score / totalPoints) * 100);
+            const circumference = 596;
+            const offset = circumference - (percent / 100) * circumference;
+            
+            requestAnimationFrame(() => {
+                setTimeout(() => { document.getElementById('final-circle').style.strokeDashoffset = offset; }, 50);
+            });
+            
+            let count = 0;
+            const timer = setInterval(() => {
+                if (count >= percent) {
+                    document.getElementById('result-percent').innerText = percent;
+                    clearInterval(timer);
+                    if(percent === 100) {
+                        confetti({
+                            particleCount: 150,
+                            spread: 70,
+                            origin: { y: 0.6 },
+                            colors: ['#054C50', '#ffffff', '#b8d4d6']
+                        });
+                    }
+                } else {
+                    count++;
+                    document.getElementById('result-percent').innerText = count;
+                }
+            }, 15);
+
+            document.getElementById('result-score').innerText = `Puntaje Final: ${score} de ${totalPoints} puntos`;
+            const msg = document.getElementById('result-msg');
+            
+            if (percent === 100) {
+                msg.innerText = "¡Excelente! Demuestras un dominio excepcional en eficiencia energética, normativas colombianas (Ley 1715 y Res. 0549) y diseño bioclimático.";
+            } else if (percent >= 70) {
+                msg.innerText = "¡Muy buen trabajo! Comprendes los conceptos clave sobre desempeño energético, sistemas de gestión ISO 50001 y estrategias pasivas.";
+            } else {
+                msg.innerText = "Te sugerimos repasar los indicadores energéticos, las normativas vigentes y el comportamiento de los puentes térmicos.";
+            }
+
+            buildSummaryCards();
+        }
+
+        function buildSummaryCards() {
+            const container = document.getElementById('summary-cards');
+            container.innerHTML = '';
+
+            quizData.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = "p-6 rounded-2xl border-l-8 bg-white/85 shadow-sm transition-all duration-300 animate__animated animate__fadeInUp backdrop-blur-md";
+                
+                const userAnsIdx = q.userAnswer;
+                const correctAnsIdx = q.options.findIndex(o => o.c);
+                const isFullyCorrect = (userAnsIdx === correctAnsIdx);
+
+                let statusBadge = '';
+                let userValHTML = '';
+                let correctValHTML = '';
+
+                if (isFullyCorrect) {
+                    card.classList.add('border-green-500');
+                    statusBadge = '<span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">Correcto</span>';
+                    userValHTML = `<span class="text-green-700 font-medium">${q.options[userAnsIdx].t}</span>`;
+                } else {
+                    card.classList.add('border-red-500');
+                    statusBadge = '<span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-bold rounded-full">Incorrecto</span>';
+                    userValHTML = `<span class="text-red-600 font-semibold">${userAnsIdx !== undefined && userAnsIdx !== null ? q.options[userAnsIdx].t : '[Sin responder]'}</span>`;
+                    correctValHTML = `
+                        <div class="text-sm mt-1">
+                            <span class="font-semibold text-slate-500">Respuesta correcta:</span> 
+                            <span class="text-green-700 font-medium">${q.options[correctAnsIdx].t}</span>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm font-bold text-slate-400 uppercase tracking-wider">Pregunta ${idx + 1}</span>
+                        ${statusBadge}
+                    </div>
+                    <div class="font-semibold text-slate-800 mb-3 text-base">${q.question}</div>
+                    
+                    <div class="bg-white/80 p-4 rounded-xl border border-slate-100 space-y-1.5 mb-3 shadow-inner">
+                        <div class="text-sm"><span class="font-semibold text-slate-600">Tu respuesta:</span> ${userValHTML}</div>
+                        ${correctValHTML}
+                    </div>
+                    
+                    <div class="text-sm text-slate-600 bg-teal-50/70 p-3 rounded-xl border border-teal-100">
+                        <strong class="text-custom">Realimentación:</strong> ${q.feedback}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
