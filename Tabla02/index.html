@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matriz de Medidas de Eficiencia Energética</title>
+    <!-- Importación de la fuente Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #054C50; /* Verde institucional */
+            --primary-hover: #033437;
+            --bg-light: #E8F3F3;       /* Verde menta claro para filas alternadas */
+            --bg-white: #ffffff;
+            --text-color: #2c3e50;
+            --border-color: #D2E5E6;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f8f8;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .table-container {
+            width: 100%;
+            max-width: 1400px;
+            box-shadow: 0 12px 40px rgba(5, 76, 80, 0.12);
+            border-radius: 8px;
+            overflow-x: auto;
+            background-color: var(--bg-white);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+            min-width: 1200px;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 10px;
+            text-align: center;
+            border-bottom: 2px solid #ffffff;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 12px 10px;
+            font-size: 12.5px;
+            color: var(--text-color);
+            line-height: 1.4;
+            vertical-align: middle;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        /* --- CONTROL DE PROPORCIONES Y ALINEACIONES (8 COLUMNAS) --- */
+        th:nth-child(1), td:nth-child(1) { width: 14%; font-weight: 600; color: #111111; border-left: none; }
+        th:nth-child(2), td:nth-child(2) { width: 13%; }
+        th:nth-child(3), td:nth-child(3) { width: 12%; }
+        th:nth-child(4), td:nth-child(4) { width: 10%; }
+        th:nth-child(5), td:nth-child(5) { width: 13%; }
+        th:nth-child(6), td:nth-child(6) { width: 13%; }
+        th:nth-child(7), td:nth-child(7) { width: 12.5%; }
+        th:nth-child(8), td:nth-child(8) { width: 12.5%; border-right: none; }
+
+        /* Alternancia de color en las filas */
+        tbody tr:nth-child(odd) td {
+            background-color: var(--bg-white);
+        }
+        tbody tr:nth-child(even) td {
+            background-color: var(--bg-light);
+        }
+
+        /* --- KEYFRAMES EFECTO LÁTIGO (WHIP EFFECT) --- */
+        @keyframes whipRow {
+            0% {
+                opacity: 0;
+                transform: translateX(-120px) scaleX(1.15) skewX(12deg);
+            }
+            60% {
+                opacity: 1;
+                transform: translateX(20px) scaleX(0.92) skewX(-4deg);
+            }
+            80% {
+                transform: translateX(-8px) scaleX(1.03) skewX(1.5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scaleX(1) skewY(0deg);
+            }
+        }
+
+        tbody tr {
+            opacity: 0;
+            animation: whipRow 0.75s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        /* Retrasos secuenciales para las 8 filas */
+        tbody tr:nth-child(1) { animation-delay: 0.08s; }
+        tbody tr:nth-child(2) { animation-delay: 0.16s; }
+        tbody tr:nth-child(3) { animation-delay: 0.24s; }
+        tbody tr:nth-child(4) { animation-delay: 0.32s; }
+        tbody tr:nth-child(5) { animation-delay: 0.40s; }
+        tbody tr:nth-child(6) { animation-delay: 0.48s; }
+        tbody tr:nth-child(7) { animation-delay: 0.56s; }
+        tbody tr:nth-child(8) { animation-delay: 0.64s; }
+
+        /* Efecto Hover interactivo */
+        tbody tr:hover td {
+            background-color: rgba(5, 76, 80, 0.08) !important;
+            transition: background-color 0.15s ease;
+            cursor: default;
+        }
+
+        /* --- SECCIÓN DE CONTROLES --- */
+        .controls-container {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #076469 0%, #054C50 100%);
+            color: #ffffff;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 25px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            box-shadow: 0 4px 15px rgba(5, 76, 80, 0.25);
+        }
+
+        .play-btn .icon {
+            font-size: 13px;
+            transition: transform 0.2s ease;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #097B81 0%, #033437 100%);
+            box-shadow: 0 6px 20px rgba(5, 76, 80, 0.35);
+        }
+
+        .play-btn:hover .icon {
+            transform: scale(1.15);
+        }
+
+        .play-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 8px rgba(5, 76, 80, 0.2);
+        }
+
+        .hint {
+            font-size: 13.5px;
+            color: #555555;
+            background-color: #ffffff;
+            padding: 6px 18px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #dce8e8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>MEDIDA DE EFICIENCIA ENERGÉTICA</th>
+                    <th>INVERSIÓN INICIAL</th>
+                    <th>AHORRO ANUAL ESPERADO</th>
+                    <th>PERÍODO DE RETORNO</th>
+                    <th>IMPACTO EN CONFORT</th>
+                    <th>REDUCCIÓN DE EMISIONES</th>
+                    <th>FACILIDAD DE IMPLEMENTACIÓN</th>
+                    <th>COMPATIBILIDAD NORMATIVA (COL.)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Fila 1 -->
+                <tr>
+                    <td>Aislamiento de envolvente (muros y cubierta)</td>
+                    <td>Moderada (1,5–3 USD/m² adicional)</td>
+                    <td>10–20 % demanda de climatización</td>
+                    <td>3–7 años</td>
+                    <td>Alto: reduce variaciones de temperatura interior</td>
+                    <td>Media: reduce consumo de climatización en forma permanente</td>
+                    <td>Media: requiere detalles constructivos precisos</td>
+                    <td>Exigida en Res. 0549/2015 según zona climática</td>
+                </tr>
+                <!-- Fila 2 -->
+                <tr>
+                    <td>Vidrios de control solar + bajo emisivo</td>
+                    <td>Alta (30–80 % sobre vidrio simple)</td>
+                    <td>5–15 % demanda climatización e iluminación</td>
+                    <td>4–8 años</td>
+                    <td>Alto: reduce deslumbramiento y sobrecalentamiento</td>
+                    <td>Media</td>
+                    <td>Alta si se especifica en diseño; difícil en retrofit</td>
+                    <td>Recomendado en Res. 0549/2015</td>
+                </tr>
+                <!-- Fila 3 -->
+                <tr>
+                    <td>Iluminación LED con sensores de presencia</td>
+                    <td>Baja a moderada (15–30 USD/m²)</td>
+                    <td>40–70 % consumo de iluminación</td>
+                    <td>1–3 años</td>
+                    <td>Positivo: mejor calidad de luz, menor calor emitido</td>
+                    <td>Media-alta: reducción directa del consumo eléctrico</td>
+                    <td>Alta: mercado maduro con amplia oferta local</td>
+                    <td>Compatible con RETIE y programas de eficiencia de la UPME</td>
+                </tr>
+                <!-- Fila 4 -->
+                <tr>
+                    <td>Sistema VRF/bomba de calor de alta eficiencia</td>
+                    <td>Alta (20–40 % sobre sistema convencional)</td>
+                    <td>30–50 % consumo de climatización</td>
+                    <td>4–8 años</td>
+                    <td>Alto: control de temperatura por zonas, mayor confort</td>
+                    <td>Alta: reduce significativamente el consumo eléctrico de climatización</td>
+                    <td>Media: requiere ingeniería especializada</td>
+                    <td>Cumple ASHRAE 90.1 referenciada en certificaciones locales</td>
+                </tr>
+                <!-- Fila 5 -->
+                <tr>
+                    <td>Calentamiento solar de agua</td>
+                    <td>Moderada (800–2,000 USD por unidad)</td>
+                    <td>50–70 % del consumo de ACS</td>
+                    <td>3–5 años</td>
+                    <td>Neutro en confort térmico de espacios</td>
+                    <td>Alta: elimina consumo fósil de calentamiento de agua</td>
+                    <td>Alta: tecnología madura con proveedores locales</td>
+                    <td>Incentivada en Res. 0549/2015 para usos con demanda de ACS</td>
+                </tr>
+                <!-- Fila 6 -->
+                <tr>
+                    <td>Sistema fotovoltaico rooftop</td>
+                    <td>Alta (800–1,200 USD/kWp instalado)</td>
+                    <td>20–80 % consumo de energía de red</td>
+                    <td>4–8 años con Ley 1715</td>
+                    <td>Neutro en confort</td>
+                    <td>Muy alta: eliminación directa de emisiones operacionales</td>
+                    <td>Media: requiere estudio de sombreado y conexión a red</td>
+                    <td>Incentivada por Ley 1715/2014; conexión regulada por CREG</td>
+                </tr>
+                <!-- Fila 7 -->
+                <tr>
+                    <td>BMS con optimización automática</td>
+                    <td>Alta (inversión en infraestructura digital)</td>
+                    <td>15–30 % consumo total de sistemas activos</td>
+                    <td>5–10 años</td>
+                    <td>Positivo: mantenimiento de confort automatizado y eficiente</td>
+                    <td>Media-alta: optimización continua de todos los sistemas</td>
+                    <td>Baja: requiere personal técnico y plataforma de datos</td>
+                    <td>Compatible con ISO 50001; requerido en proyectos LEED O+M</td>
+                </tr>
+                <!-- Fila 8 -->
+                <tr>
+                    <td>Rehabilitación energética integral (retrofit)</td>
+                    <td>Muy alta (50–150 USD/m² rehabilitado)</td>
+                    <td>40–70 % consumo energético total</td>
+                    <td>8–15 años</td>
+                    <td>Alto: mejora significativa del confort interior</td>
+                    <td>Muy alta: transformación del perfil de consumo del edificio</td>
+                    <td>Baja: requiere planificación detallada y coordinación de obras</td>
+                    <td>Compatible con Ley 1715 y líneas de crédito verde BANCÓLDEX</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Contenedor con elementos de control -->
+    <div class="controls-container">
+        <button class="play-btn" id="restartBtn" title="Reiniciar animación">
+            <span class="icon">▶</span>
+            <span>Reiniciar</span>
+        </button>
+        <div class="hint">Haga clic sobre el botón "▶" para reiniciar la animación.</div>
+    </div>
+
+    <!-- Script JavaScript para reinicio de animación -->
+    <script>
+        function triggerWhipAnimation() {
+            const tableContainer = document.querySelector('.table-container');
+            
+            tableContainer.style.display = 'none';
+            void tableContainer.offsetWidth; 
+            tableContainer.style.display = 'block';
+        }
+
+        document.getElementById('restartBtn').addEventListener('click', triggerWhipAnimation);
+    </script>
+</body>
+</html>
