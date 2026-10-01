@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sostenibilidad y Normativas</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .perspective {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        
+        /* Subtle glowing border effect */
+        .card-glow {
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.15);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-glow:hover {
+            box-shadow: 0 0 35px 0px rgba(16, 185, 129, 0.35);
+        }
+
+        /* Ambient background pulse */
+        @keyframes ambientPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+        }
+        .bg-pulse {
+            animation: ambientPulse 8s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-center items-center p-4 sm:p-8 relative overflow-x-hidden selection:bg-emerald-500 selection:text-slate-950">
+
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-600/20 rounded-full blur-[120px] pointer-events-none bg-pulse"></div>
+    <div class="absolute bottom-10 right-10 w-[300px] h-[300px] bg-teal-600/15 rounded-full blur-[100px] pointer-events-none bg-pulse"></div>
+
+    <main class="w-full max-w-5xl z-10 space-y-8">
+        
+        <header class="text-center space-y-2">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <i class="fa-solid fa-hand-pointer text-emerald-400 animate-bounce"></i> Haz clic en las tarjetas
+            </span>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            
+            <!-- TARJETA 1 -->
+            <div class="perspective h-[260px] sm:h-[280px]">
+                <div id="card-1" onclick="toggleCard('card-1')" class="relative w-full h-full duration-700 transform-style-3d cursor-pointer card-glow rounded-2xl">
+                    
+                    <!-- Frente -->
+                    <div class="absolute inset-0 w-full h-full rounded-2xl bg-slate-900/90 border border-slate-800 p-8 flex flex-col justify-between items-center text-center backface-hidden backdrop-blur-xl group hover:border-emerald-500/50 transition-colors">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl group-hover:scale-110 transition-transform duration-300">
+                            <i class="fa-solid fa-leaf"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Opción 01</span>
+                            <h2 class="text-lg font-medium text-slate-200">Prácticas Sostenibles</h2>
+                        </div>
+                        <span class="text-xs text-emerald-400 font-medium flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                            Ver detalles <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </span>
+                    </div>
+
+                    <!-- Reverso (Texto exacto 1) -->
+                    <div class="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-emerald-950/80 via-slate-900 to-slate-900 border border-emerald-500/60 p-8 flex flex-col justify-center items-center text-center backface-hidden rotate-y-180 backdrop-blur-xl">
+                        <i class="fa-solid fa-quote-left text-emerald-500/30 text-3xl mb-3"></i>
+                        <p class="text-base sm:text-lg text-slate-100 font-normal leading-relaxed">
+                            Integra prácticas sostenibles en la ejecución de proyectos para reducir el impacto ambiental.
+                        </p>
+                        <span class="mt-4 text-xs text-slate-400 font-light flex items-center gap-1">
+                            <i class="fa-solid fa-rotate-left text-[10px]"></i> Haz clic para volver
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- TARJETA 2 -->
+            <div class="perspective h-[260px] sm:h-[280px]">
+                <div id="card-2" onclick="toggleCard('card-2')" class="relative w-full h-full duration-700 transform-style-3d cursor-pointer card-glow rounded-2xl">
+                    
+                    <!-- Frente -->
+                    <div class="absolute inset-0 w-full h-full rounded-2xl bg-slate-900/90 border border-slate-800 p-8 flex flex-col justify-between items-center text-center backface-hidden backdrop-blur-xl group hover:border-teal-500/50 transition-colors">
+                        <div class="w-14 h-14 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 text-2xl group-hover:scale-110 transition-transform duration-300">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Opción 02</span>
+                            <h2 class="text-lg font-medium text-slate-200">Normativas y Estándares</h2>
+                        </div>
+                        <span class="text-xs text-teal-400 font-medium flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                            Ver detalles <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </span>
+                    </div>
+
+                    <!-- Reverso (Texto exacto 2) -->
+                    <div class="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-teal-950/80 via-slate-900 to-slate-900 border border-teal-500/60 p-8 flex flex-col justify-center items-center text-center backface-hidden rotate-y-180 backdrop-blur-xl">
+                        <i class="fa-solid fa-quote-left text-teal-500/30 text-3xl mb-3"></i>
+                        <p class="text-base sm:text-lg text-slate-100 font-normal leading-relaxed">
+                            Identifica normativas internacionales y estándares locales para asegurar el cumplimiento de criterios de sostenibilidad.
+                        </p>
+                        <span class="mt-4 text-xs text-slate-400 font-light flex items-center gap-1">
+                            <i class="fa-solid fa-rotate-left text-[10px]"></i> Haz clic para volver
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // Web Audio API for subtle flip sound feedback
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playFlipSound() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.15);
+
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
+
+        function toggleCard(cardId) {
+            const card = document.getElementById(cardId);
+            card.classList.toggle('rotate-y-180');
+            playFlipSound();
+        }
+    </script>
+</body>
+</html>
