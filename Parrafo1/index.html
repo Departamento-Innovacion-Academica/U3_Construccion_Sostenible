@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eficiencia Energética - Tema Oscuro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f172a; /* Fondo oscuro principal (slate-900) */
+        }
+
+        /* Smoke-in animation effect combining blur, opacity and slight translation */
+        @keyframes smokeIn {
+            0% {
+                opacity: 0;
+                filter: blur(12px);
+                transform: translateY(20px) scale(0.95);
+            }
+            50% {
+                opacity: 0.5;
+                filter: blur(6px);
+                transform: translateY(10px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0px);
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .card-item {
+            opacity: 0;
+        }
+        .card-item.active {
+            animation: smokeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-8 m-0">
+
+    <!-- Contenedor centralizador que agrupa instrucción, carrusel y controles juntos -->
+    <div class="w-full max-w-3xl mx-auto flex flex-col items-center">
+
+        <!-- Instrucción flotante superior (Tema Oscuro) -->
+        <div class="mb-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#134e4a]/60 border border-[#2dd4bf]/40 text-[#5eead4] text-sm font-medium shadow-sm text-center">
+            <span>💡</span> Haga clic sobre los botones para navegar por los contenidos.
+        </div>
+
+        <!-- Contenedor del Carrusel Vertical ajustado para texto extenso (altura fija de 330px) -->
+        <div class="w-full relative overflow-hidden rounded-3xl py-1 h-[330px] flex items-center justify-center">
+            <div id="carouselTrack" class="w-full absolute top-0 left-0 transition-transform duration-500 ease-out flex flex-col items-center">
+                
+                <!-- Diapositiva / Párrafo 1 -->
+                <div class="w-full flex-shrink-0 py-2 flex flex-col justify-center h-[330px]">
+                    <div class="card-item bg-[#1e293b] border-2 border-[#2dd4bf]/50 rounded-2xl p-6 sm:p-7 shadow-lg w-full flex items-center h-full overflow-y-auto">
+                        <p class="text-[#f1f5f9] text-sm sm:text-base leading-relaxed text-left font-normal">
+                            Los sistemas activos de eficiencia energética operan mediante el consumo de energía para proveer servicios de confort o productividad, pero lo hacen con un rendimiento significativamente mayor que los sistemas convencionales, reduciendo el consumo por unidad de servicio prestado. Su integración con las estrategias pasivas de diseño es fundamental: los sistemas activos deben dimensionarse para cubrir únicamente la demanda residual que las estrategias pasivas no logran satisfacer. Un edificio bien diseñado pasivamente requiere sistemas activos más pequeños, menos costosos de instalar, operar y mantener, y con menor riesgo de fallo.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Diapositiva / Párrafo 2 -->
+                <div class="w-full flex-shrink-0 py-2 flex flex-col justify-center h-[330px]">
+                    <div class="card-item bg-[#1e293b] border-2 border-[#2dd4bf]/50 rounded-2xl p-6 sm:p-7 shadow-lg w-full flex items-center h-full overflow-y-auto">
+                        <p class="text-[#f1f5f9] text-sm sm:text-base leading-relaxed text-left font-normal">
+                            Los sistemas de climatización representan la mayor oportunidad de ahorro en la mayoría de las tipologías edilicias. Las bombas de calor de alta eficiencia, los sistemas de climatización centralizada con recuperación de calor, las unidades de expansión directa inverter y los sistemas de techos o suelos radiantes presentan coeficientes de rendimiento (COP) entre 3,0 y 6,0, frente a los sistemas convencionales de resistencia eléctrica con COP de 1,0. La norma ASHRAE Standard 90.1-2019 establece los requisitos mínimos de eficiencia para equipos de climatización en edificaciones no residenciales, y constituye la referencia técnica para proyectos con certificaciones internacionales (Energycodes, 2021). En Colombia, la transición de refrigerantes HFC de alto potencial de calentamiento global (HFC-410A con GWP=2088) a refrigerantes de bajo GWP como el R32 (GWP=675) o el R290 (GWP=3) es una tendencia regulatoria acelerada por el Protocolo de Kigali (Minambiente, 2018).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Diapositiva / Párrafo 3 -->
+                <div class="w-full flex-shrink-0 py-2 flex flex-col justify-center h-[330px]">
+                    <div class="card-item bg-[#1e293b] border-2 border-[#2dd4bf]/50 rounded-2xl p-6 sm:p-7 shadow-lg w-full flex items-center h-full overflow-y-auto">
+                        <p class="text-[#f1f5f9] text-sm sm:text-base leading-relaxed text-left font-normal">
+                            La iluminación artificial eficiente es posiblemente la medida de eficiencia energética con el período de retorno más corto disponible en el mercado. La sustitución de iluminación fluorescente convencional por luminarias LED de alta eficiencia permite ahorros del 40 % al 70 % en el consumo de iluminación, con vidas útiles de 25,000 a 50,000 horas y calidades de luz superiores en términos de índice de reproducción cromática y temperatura de color (IEA, 2023). Los sistemas de control de iluminación, sensores de presencia, sensores de luz natural y sistemas de gestión inteligente DALI o KNX, añaden un 10 % a 30 % adicional de ahorro al optimizar el uso de luz artificial en función de la ocupación real y la disponibilidad de luz natural. Para edificaciones institucionales y comerciales con grandes superficies de oficinas, el retorno de la inversión de estas medidas suele ser inferior a tres años.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Navigation Controls (Tema Oscuro) -->
+        <div class="w-full flex items-center justify-between mt-5 px-2">
+            <button id="prevBtn" onclick="prevSlide()" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm border border-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Anterior
+            </button>
+
+            <span id="pageIndicator" class="text-sm font-semibold text-slate-400 tracking-wider">1 de 3</span>
+
+            <button id="nextBtn" onclick="nextSlide()" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-teal-600 text-white font-medium hover:bg-teal-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm">
+                Siguiente
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        const totalSlides = 3; // 3 párrafos en total
+
+        const track = document.getElementById('carouselTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const slideGroups = track.children;
+
+        function updateCarousel() {
+            const slideHeight = 330; // Altura exacta del contenedor de cada diapositiva
+            track.style.transform = `translateY(-${currentIndex * slideHeight}px)`;
+            
+            pageIndicator.textContent = `${currentIndex + 1} de ${totalSlides}`;
+
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === totalSlides - 1;
+
+            // Activar la animación de humo en la tarjeta actual
+            Array.from(slideGroups).forEach((group, index) => {
+                const card = group.querySelector('.card-item');
+                if (index === currentIndex) {
+                    card.classList.remove('active');
+                    void card.offsetWidth; // Forzar reflow
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        function nextSlide() {
+            if (currentIndex < totalSlides - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCarousel();
+        });
+    </script>
+
+</body>
+</html>
