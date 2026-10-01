@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matriz de Estrategias de Eficiencia Energética</title>
+    <!-- Importación de la fuente Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #054C50; /* Verde institucional */
+            --primary-hover: #033437;
+            --bg-light: #E8F3F3;       /* Verde menta claro para filas alternadas */
+            --bg-white: #ffffff;
+            --text-color: #2c3e50;
+            --border-color: #D2E5E6;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f8f8;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .table-container {
+            width: 100%;
+            max-width: 1500px;
+            box-shadow: 0 12px 40px rgba(5, 76, 80, 0.12);
+            border-radius: 8px;
+            overflow-x: auto;
+            background-color: var(--bg-white);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+            min-width: 1300px;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 10px;
+            text-align: center;
+            border-bottom: 2px solid #ffffff;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 12px 10px;
+            font-size: 12px;
+            color: var(--text-color);
+            line-height: 1.4;
+            vertical-align: middle;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        /* --- CONTROL DE PROPORCIONES Y ALINEACIONES (8 COLUMNAS) --- */
+        th:nth-child(1), td:nth-child(1) { width: 13%; font-weight: 600; color: #111111; border-left: none; }
+        th:nth-child(2), td:nth-child(2) { width: 18%; }
+        th:nth-child(3), td:nth-child(3) { width: 12%; }
+        th:nth-child(4), td:nth-child(4) { width: 15%; }
+        th:nth-child(5), td:nth-child(5) { width: 12%; }
+        th:nth-child(6), td:nth-child(6) { width: 13%; }
+        th:nth-child(7), td:nth-child(7) { width: 11%; }
+        th:nth-child(8), td:nth-child(8) { width: 6%; text-align: center; border-right: none; }
+
+        /* Alternancia de color en las filas */
+        tbody tr:nth-child(odd) td {
+            background-color: var(--bg-white);
+        }
+        tbody tr:nth-child(even) td {
+            background-color: var(--bg-light);
+        }
+
+        /* --- KEYFRAMES EFECTO LÁTIGO (WHIP EFFECT) --- */
+        @keyframes whipRow {
+            0% {
+                opacity: 0;
+                transform: translateX(-120px) scaleX(1.15) skewX(12deg);
+            }
+            60% {
+                opacity: 1;
+                transform: translateX(20px) scaleX(0.92) skewX(-4deg);
+            }
+            80% {
+                transform: translateX(-8px) scaleX(1.03) skewX(1.5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scaleX(1) skewY(0deg);
+            }
+        }
+
+        tbody tr {
+            opacity: 0;
+            animation: whipRow 0.75s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        /* Retrasos secuenciales para las 10 filas */
+        tbody tr:nth-child(1) { animation-delay: 0.08s; }
+        tbody tr:nth-child(2) { animation-delay: 0.16s; }
+        tbody tr:nth-child(3) { animation-delay: 0.24s; }
+        tbody tr:nth-child(4) { animation-delay: 0.32s; }
+        tbody tr:nth-child(5) { animation-delay: 0.40s; }
+        tbody tr:nth-child(6) { animation-delay: 0.48s; }
+        tbody tr:nth-child(7) { animation-delay: 0.56s; }
+        tbody tr:nth-child(8) { animation-delay: 0.64s; }
+        tbody tr:nth-child(9) { animation-delay: 0.72s; }
+        tbody tr:nth-child(10) { animation-delay: 0.80s; }
+
+        /* Efecto Hover interactivo */
+        tbody tr:hover td {
+            background-color: rgba(5, 76, 80, 0.08) !important;
+            transition: background-color 0.15s ease;
+            cursor: default;
+        }
+
+        /* --- SECCIÓN DE CONTROLES --- */
+        .controls-container {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #076469 0%, #054C50 100%);
+            color: #ffffff;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 25px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            box-shadow: 0 4px 15px rgba(5, 76, 80, 0.25);
+        }
+
+        .play-btn .icon {
+            font-size: 13px;
+            transition: transform 0.2s ease;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #097B81 0%, #033437 100%);
+            box-shadow: 0 6px 20px rgba(5, 76, 80, 0.35);
+        }
+
+        .play-btn:hover .icon {
+            transform: scale(1.15);
+        }
+
+        .play-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 8px rgba(5, 76, 80, 0.2);
+        }
+
+        .hint {
+            font-size: 13.5px;
+            color: #555555;
+            background-color: #ffffff;
+            padding: 6px 18px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #dce8e8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ESTRATEGIA</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th>ETAPA DE APLICACIÓN</th>
+                    <th>BENEFICIOS PRINCIPALES</th>
+                    <th>COSTO RELATIVO</th>
+                    <th>RIESGOS DE IMPLEMENTACIÓN</th>
+                    <th>INDICADOR DE SEGUIMIENTO</th>
+                    <th>PRIORIDAD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Fila 1 -->
+                <tr>
+                    <td>Orientación solar óptima</td>
+                    <td>Disposición del edificio para minimizar ganancias solares no deseadas y maximizar la luz y ventilación naturales.</td>
+                    <td>Diseño conceptual</td>
+                    <td>Reducción 10–25 % en demanda de climatización; mejora del confort visual.</td>
+                    <td>Nulo (decisión de diseño)</td>
+                    <td>Restricciones de urbanismo o lote que limiten la orientación libre.</td>
+                    <td>Factor de iluminación natural (FLN); horas de Disconfort térmico/año.</td>
+                    <td>Alta</td>
+                </tr>
+                <!-- Fila 2 -->
+                <tr>
+                    <td>Ventilación natural cruzada</td>
+                    <td>Uso de aberturas en fachadas opuestas para generar flujo de aire impulsado por diferencias de presión del viento.</td>
+                    <td>Diseño esquemático y de desarrollo</td>
+                    <td>Eliminación o reducción del sistema de climatización mecánica; mejora CAI.</td>
+                    <td>Bajo (diseño arquitectónico sin equipos adicionales)</td>
+                    <td>Dependencia de condiciones climáticas locales; riesgo de entrada de ruido o contaminación.</td>
+                    <td>Velocidad de aire interior (m/s); CO₂ interior (ppm); temperatura operativa (°C).</td>
+                    <td>Alta</td>
+                </tr>
+                <!-- Fila 3 -->
+                <tr>
+                    <td>Aislamiento térmico de envolvente</td>
+                    <td>Incorporación de materiales de baja conductividad en muros, cubiertas y pisos para reducir el flujo de calor.</td>
+                    <td>Diseño de desarrollo y construcción</td>
+                    <td>Reducción 15–40 % en demanda de climatización; mejora del confort interior.</td>
+                    <td>Moderado (2–5 % sobre costo base de envolvente)</td>
+                    <td>Errores de instalación (puentes térmicos); humedades por condensación si falta barrera de vapor.</td>
+                    <td>Valor U real medido (W/m²K); consumo de climatización (kWh/m²·año).</td>
+                    <td>Alta</td>
+                </tr>
+                <!-- Fila 4 -->
+                <tr>
+                    <td>Control solar en fachadas</td>
+                    <td>Aleros, lamas horizontales y verticales, celosías o vegetación que reducen la radiación solar directa en ventanas.</td>
+                    <td>Diseño esquemático y de desarrollo</td>
+                    <td>Reducción del factor solar en hasta 50–70 %; mejora del confort visual.</td>
+                    <td>Bajo a moderado (3–8 % sobre costo de fachada)</td>
+                    <td>Diseño inadecuado puede reducir luz natural y aumentar uso de iluminación artificial.</td>
+                    <td>Factor solar efectivo; iluminancia interior (lux); consumo de iluminación artificial.</td>
+                    <td>Alta</td>
+                </tr>
+                <!-- Fila 5 -->
+                <tr>
+                    <td>Masa térmica</td>
+                    <td>Uso de materiales densos (hormigón, ladrillo macizo) para almacenar calor y reducir fluctuaciones de temperatura.</td>
+                    <td>Diseño de desarrollo y especificación de materiales</td>
+                    <td>Amortiguación de picos térmicos en climas con alta oscilación diurna; reducción de climatización.</td>
+                    <td>Nulo a bajo (generalmente implica materiales locales convencionales)</td>
+                    <td>Contraproducente en climas cálidos húmedos sin oscilación diurna significativa.</td>
+                    <td>Temperatura operativa interior (°C); amplitud de oscilación térmica diaria.</td>
+                    <td>Media</td>
+                </tr>
+                <!-- Fila 6 -->
+                <tr>
+                    <td>Daylighting con control de deslumbramiento</td>
+                    <td>Diseño de ventanas, lucernarios y elementos de redistribución de luz para maximizar iluminación natural controlada.</td>
+                    <td>Diseño esquemático y de desarrollo</td>
+                    <td>Reducción 20–40 % en consumo de iluminación artificial; mejora del bienestar.</td>
+                    <td>Bajo a moderado (depende de sistemas de redistribución empleados)</td>
+                    <td>Riesgo de deslumbramiento y sobrecalentamiento si no se controla adecuadamente.</td>
+                    <td>Useful Daylight Illuminance (UDI); consumo de iluminación artificial (kWh/m²·año).</td>
+                    <td>Alta</td>
+                </tr>
+                <!-- Fila 7 -->
+                <tr>
+                    <td>Climatización de alta eficiencia (VRF/bomba de calor)</td>
+                    <td>Sistemas de expansión directa variable o bombas de calor de alta eficiencia para satisfacer demanda residual.</td>
+                    <td>Diseño de ingeniería y construcción</td>
+                    <td>COP 3,0–6,0 vs. 1,0 de resistencia eléctrica; control por zonas; bajo mantenimiento.</td>
+                    <td>Alto (30–60 % sobre sistemas convencionales)</td>
+                    <td>Requiere personal técnico especializado para mantenimiento; sensible a refrigerantes.</td>
+                    <td>EER/COP medido en operación; consumo de climatización (kWh/m²·año).</td>
+                    <td>Alta</td>
+                </tr>
+                <!-- Fila 8 -->
+                <tr>
+                    <td>Iluminación LED con control automático</td>
+                    <td>Luminarias LED de alta eficiencia con sensores de presencia y luz natural para optimizar el uso de luz artificial.</td>
+                    <td>Diseño de instalaciones y construcción</td>
+                    <td>Reducción 40–70 % en consumo de iluminación; larga vida útil (25,000–50,000 h).</td>
+                    <td>Moderado (retorno típico 1–3 años)</td>
+                    <td>Calidad de la luz (IRC, temperatura de color); compatibilidad del sistema de control.</td>
+                    <td>Densidad de potencia de iluminación (W/m²); consumo mensual de iluminación (kWh).</td>
+                    <td>Muy alta</td>
+                </tr>
+                <!-- Fila 9 -->
+                <tr>
+                    <td>Generación solar fotovoltaica (rooftop)</td>
+                    <td>Instalación de paneles fotovoltaicos en cubierta para autoconsumo y/o exportación a la red.</td>
+                    <td>Diseño conceptual y de instalaciones</td>
+                    <td>Reducción 20–80 % del consumo de energía de red; incentivos fiscales Ley 1715.</td>
+                    <td>Alto (inversión significativa; retorno 4–8 años con incentivos)</td>
+                    <td>Limitaciones de área de cubierta disponible; normativa de conexión a red.</td>
+                    <td>Generación mensual (kWh); fracción solar de autoconsumo (%); FUI neto.</td>
+                    <td>Alta</td>
+                </tr>
+                <!-- Fila 10 -->
+                <tr>
+                    <td>Sistema de gestión de edificios (BMS)</td>
+                    <td>Plataforma digital que integra el control y monitoreo de todos los sistemas activos del edificio.</td>
+                    <td>Diseño de instalaciones y puesta en marcha</td>
+                    <td>Reducción 15–30 % consumo total; datos para optimización continua; mantenimiento predictivo.</td>
+                    <td>Alto (inversión en hardware, software y puesta en marcha)</td>
+                    <td>Requiere personal técnico calificado para operación; riesgo de ciberseguridad.</td>
+                    <td>Consumo total por sistema (kWh/m²·año); índice de eficiencia operacional.</td>
+                    <td>Media</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Contenedor con elementos de control -->
+    <div class="controls-container">
+        <button class="play-btn" id="restartBtn" title="Reiniciar animación">
+            <span class="icon">▶</span>
+            <span>Reiniciar</span>
+        </button>
+        <div class="hint">Haga clic sobre el botón "▶" para reiniciar la animación.</div>
+    </div>
+
+    <!-- Script JavaScript para reinicio de animación -->
+    <script>
+        function triggerWhipAnimation() {
+            const tableContainer = document.querySelector('.table-container');
+            
+            tableContainer.style.display = 'none';
+            void tableContainer.offsetWidth; 
+            tableContainer.style.display = 'block';
+        }
+
+        document.getElementById('restartBtn').addEventListener('click', triggerWhipAnimation);
+    </script>
+</body>
+</html>
