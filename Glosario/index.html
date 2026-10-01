@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glosario Interactivo - Eficiencia Energética y Confort Térmico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        /* --- VARIABLES DE COLOR --- */
+        :root {
+            --primary-brand: #054C50;
+            --primary-hover: #04393b;
+            --bg-light: #ececec;
+            --text-dark: #333333;
+            --white: #ffffff;
+            --disabled-gray: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: radial-gradient(#d0d0d0 1px, transparent 1px);
+            background-size: 10px 10px;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- PANTALLA INICIAL (PORTADA) --- */
+        .welcome-screen {
+            background: var(--white);
+            width: 100%;
+            max-width: 650px;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(5, 76, 80, 0.12);
+            text-align: center;
+            position: absolute;
+            transition: all 0.4s ease-in-out;
+            border-top: 6px solid var(--primary-brand);
+            z-index: 10;
+        }
+
+        .welcome-badge {
+            background-color: rgba(5, 76, 80, 0.08);
+            color: var(--primary-brand);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .welcome-screen h1 {
+            color: var(--text-dark);
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            line-height: 1.2;
+        }
+
+        .welcome-screen h1 span {
+            color: var(--primary-brand);
+            display: block;
+        }
+
+        .welcome-screen p {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0 auto 35px auto;
+            max-width: 480px;
+        }
+
+        .start-btn {
+            background-color: var(--primary-brand);
+            color: var(--white);
+            border: none;
+            padding: 15px 45px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(5, 76, 80, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            outline: none;
+        }
+
+        .start-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5, 76, 80, 0.4);
+        }
+
+        .welcome-screen.hidden-screen {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        /* --- CONTENEDOR DEL GLOSARIO --- */
+        .glossary-widget {
+            width: 100%;
+            max-width: 900px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            position: absolute;
+        }
+
+        .glossary-widget.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            position: relative;
+        }
+
+        .instruction-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .instruction-badge {
+            background-color: var(--primary-brand);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: pulse-attention 2s infinite;
+        }
+
+        @keyframes pulse-attention {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(5, 76, 80, 0.4);
+            }
+
+            70% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 10px rgba(5, 76, 80, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(5, 76, 80, 0);
+            }
+        }
+
+        .glossary-header {
+            background-color: var(--primary-brand);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .glossary-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .glossary-body {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .tabs-container {
+            display: flex;
+            flex-direction: column;
+            width: 140px;
+            flex-shrink: 0;
+            background-color: var(--primary-brand);
+            border-radius: 15px;
+            padding: 10px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--white);
+            border: none;
+            padding: 15px 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+
+        .tab-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn.active {
+            background-color: var(--bg-light);
+            color: var(--primary-brand);
+            border-radius: 5px 0 0 5px;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            background-color: var(--bg-light);
+            border-radius: 15px;
+            padding: 40px;
+            min-height: 450px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .definition-item {
+            margin-bottom: 30px;
+            padding-left: 20px;
+            border-left: 5px solid var(--primary-brand);
+        }
+
+        .definition-item h3 {
+            color: var(--primary-brand);
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .definition-item p {
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin: 0;
+            text-align: left;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes slideUpFade {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-group.animate-in .definition-item {
+            animation: slideUpFade 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .content-group.animate-in .definition-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .content-group.animate-in .definition-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .content-group.animate-in .definition-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .content-group.animate-in .definition-item:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .content-group.animate-in .definition-item:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                align-items: flex-start;
+                padding: 20px 10px;
+            }
+
+            .glossary-body {
+                flex-direction: column;
+            }
+
+            .tabs-container {
+                width: 100%;
+                flex-direction: row;
+                position: static;
+            }
+
+            .tab-btn {
+                flex: 1;
+                border-bottom: none;
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+                font-size: 0.9rem;
+            }
+
+            .tab-btn.active {
+                border-radius: 10px 10px 0 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PANTALLA INICIAL (PORTADA) -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-badge">Recurso Interactivo</div>
+        <h1>Glosario de la Unidad <span>Eficiencia Energética y Confort Térmico</span></h1>
+        <p>Explora los conceptos fundamentales sobre el desempeño térmico, auditorías energéticas y normativas aplicadas
+            a las edificaciones.</p>
+        <button class="start-btn" onclick="startGlossary()">
+            Iniciar Recurso <span>➔</span>
+        </button>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL DEL GLOSARIO -->
+    <div class="glossary-widget" id="glossaryWidget">
+        <div class="instruction-wrapper">
+            <div class="instruction-badge">
+                <span>👆</span> Haga Clic sobre los botones para ampliar la información
+            </div>
+        </div>
+
+        <div class="glossary-header">
+            <h2>Glosario de Eficiencia Energética y Confort Térmico</h2>
+        </div>
+
+        <div class="glossary-body">
+            <div class="tabs-container">
+                <button class="tab-btn active" onclick="filterContent('A-E', this)">A – E</button>
+                <button class="tab-btn" onclick="filterContent('I-P', this)">I – P</button>
+                <button class="tab-btn" onclick="filterContent('R-Z', this)">R – Z</button>
+            </div>
+
+            <div class="content-area">
+                <!-- Grupo A – E -->
+                <div class="content-group animate-in" id="group-A-E">
+                    <div class="definition-item">
+                        <h3>Auditoría energética</h3>
+                        <p>Proceso sistemático de recopilación, análisis y evaluación del consumo energético de una
+                            edificación, con el fin de identificar oportunidades de mejora y estimar ahorros
+                            potenciales. La norma ISO 50002:2014 establece los requisitos mínimos para su realización
+                            (ISO, 2014).</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Confort térmico</h3>
+                        <p>Estado mental en el que una persona expresa satisfacción con el ambiente térmico circundante.
+                            Se determina mediante la interacción de variables ambientales (temperatura del aire,
+                            temperatura radiante media, humedad relativa y velocidad del aire) y variables personales
+                            (metabolismo y vestimenta), según la norma ASHRAE 55-2020 (ASHRAE, 2020a).</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Eficiencia energética</h3>
+                        <p>Capacidad de un sistema, proceso o edificación de proveer un servicio determinado minimizando
+                            la cantidad de energía consumida. En el contexto de edificaciones, se refiere al conjunto de
+                            medidas técnicas, de diseño y operacionales que reducen la demanda energética sin
+                            comprometer el confort o la funcionalidad de los espacios (IEA, 2023).</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Energía incorporada</h3>
+                        <p>Energía total consumida durante la extracción de materias primas, fabricación de materiales y
+                            componentes, transporte, construcción y demolición de una edificación. También denominada
+                            energía gris o embodied energy; su reducción es clave para alcanzar objetivos de carbono
+                            cero en el sector construcción (Hammond & Jones, 2019).</p>
+                    </div>
+                </div>
+
+                <!-- Grupo I – P -->
+                <div class="content-group hidden" id="group-I-P">
+                    <div class="definition-item">
+                        <h3>Energía operacional</h3>
+                        <p>Energía requerida durante la fase de uso de una edificación para satisfacer sus necesidades
+                            de climatización, iluminación, equipos, elevadores y demás sistemas. Representa entre el 60
+                            % y el 80 % del consumo energético total en el ciclo de vida de un edificio convencional
+                            (UNEP, 2022).</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Energía renovable</h3>
+                        <p>Energía procedente de fuentes naturales que se regeneran a una tasa superior a la de su
+                            consumo, como la solar, eólica, hidráulica, geotérmica y de biomasa. En edificaciones, su
+                            integración reduce la dependencia de combustibles fósiles y las emisiones de gases de efecto
+                            invernadero asociadas al consumo operacional (IEA, 2023; Ley 1715, 2014).</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Envolvente térmica</h3>
+                        <p>Conjunto de elementos constructivos que delimitan el espacio interior climatizado de la
+                            edificación del exterior: muros, cubiertas, suelos, ventanas y puertas. La calidad de la
+                            envolvente determina en gran medida la demanda de calefacción y refrigeración del edificio
+                            (ASHRAE, 2021).</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Iluminación natural (daylighting)</h3>
+                        <p>Uso estratégico y controlado de la luz solar para iluminar espacios interiores, reduciendo la
+                            dependencia de iluminación artificial y mejorando las condiciones visuales y el bienestar de
+                            los ocupantes. Su diseño integra factores de orientación, tamaño y posición de ventanas,
+                            dispositivos de control solar y sistemas de distribución de luz (Lechner, 2015).</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Intensidad de uso energético (EUI)</h3>
+                        <p>Indicador que expresa el consumo total de energía de un edificio por unidad de área en un
+                            período determinado, generalmente un año, y se mide en kWh/m²·año o kBtu/ft²·año. Es el
+                            principal indicador para comparar el desempeño energético entre edificaciones de similar uso
+                            y permite monitorear mejoras a lo largo del tiempo (IFC, 2019).</p>
+                    </div>
+                </div>
+
+                <!-- Grupo R – Z -->
+                <div class="content-group hidden" id="group-R-Z">
+                    <div class="definition-item">
+                        <h3>Puente térmico</h3>
+                        <p>Zona localizada de la envolvente en la que el flujo de calor es significativamente mayor que
+                            el flujo medio, debido a discontinuidades geométricas, cambios de materiales o penetraciones
+                            estructurales. Los puentes térmicos incrementan la demanda energética y pueden generar
+                            condensaciones superficiales con riesgo de patologías en el elemento constructivo (ASHRAE,
+                            2021; Kibert, 2016).</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Transmitancia térmica (valor U)</h3>
+                        <p>Parámetro que cuantifica el flujo de calor que atraviesa un elemento constructivo por unidad
+                            de área y diferencia de temperatura, expresado en W/m²K. Un valor U bajo indica mayor
+                            resistencia al paso del calor y, por tanto, mejor desempeño térmico de la envolvente (ISO,
+                            2017b).</p>
+                    </div>
+                    <div class="definition-item">
+                        <h3>Ventilación natural</h3>
+                        <p>Movimiento de aire a través de aberturas en la envolvente de un edificio impulsado por
+                            diferencias de presión debidas al viento o al efecto chimenea térmico, sin el uso de
+                            sistemas mecánicos. Es una estrategia pasiva fundamental para el control térmico y la
+                            calidad del aire interior en climas cálidos y templados (Givoni, 1994; ASHRAE, 2022a).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startGlossary() {
+            const welcome = document.getElementById('welcomeScreen');
+            const glossary = document.getElementById('glossaryWidget');
+
+            welcome.classList.add('hidden-screen');
+            glossary.classList.add('show');
+        }
+
+        function filterContent(groupId, btnElement) {
+            const groups = document.querySelectorAll('.content-group');
+            groups.forEach(group => {
+                group.classList.add('hidden');
+                group.classList.remove('animate-in');
+            });
+
+            const selectedGroup = document.getElementById('group-' + groupId);
+            if (selectedGroup) {
+                selectedGroup.classList.remove('hidden');
+                void selectedGroup.offsetWidth;
+                selectedGroup.classList.add('animate-in');
+            }
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+        }
+    </script>
+
+</body>
+
+</html>
