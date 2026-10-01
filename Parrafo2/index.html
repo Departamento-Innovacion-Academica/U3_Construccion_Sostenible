@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zonificación y Consumo Energético - Tema Oscuro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f172a; /* Fondo oscuro principal (slate-900) */
+        }
+
+        /* Smoke-in animation effect combining blur, opacity and slight translation */
+        @keyframes smokeIn {
+            0% {
+                opacity: 0;
+                filter: blur(12px);
+                transform: translateY(20px) scale(0.95);
+            }
+            50% {
+                opacity: 0.5;
+                filter: blur(6px);
+                transform: translateY(10px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0px);
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .card-item {
+            opacity: 0;
+        }
+        .card-item.active {
+            animation: smokeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-8 m-0">
+
+    <!-- Contenedor centralizador que agrupa instrucción, carrusel y controles juntos -->
+    <div class="w-full max-w-3xl mx-auto flex flex-col items-center">
+
+        <!-- Instrucción flotante superior (Tema Oscuro) -->
+        <div class="mb-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#134e4a]/60 border border-[#2dd4bf]/40 text-[#5eead4] text-sm font-medium shadow-sm text-center">
+            <span>💡</span> Haga clic sobre los botones para navegar por los contenidos.
+        </div>
+
+        <!-- Contenedor del Carrusel Vertical ajustado para texto extenso (altura fija de 330px) -->
+        <div class="w-full relative overflow-hidden rounded-3xl py-1 h-[330px] flex items-center justify-center">
+            <div id="carouselTrack" class="w-full absolute top-0 left-0 transition-transform duration-500 ease-out flex flex-col items-center">
+                
+                <!-- Diapositiva / Párrafo 1 -->
+                <div class="w-full flex-shrink-0 py-2 flex flex-col justify-center h-[330px]">
+                    <div class="card-item bg-[#1e293b] border-2 border-[#2dd4bf]/50 rounded-2xl p-6 sm:p-7 shadow-lg w-full flex items-center h-full overflow-y-auto">
+                        <p class="text-[#f1f5f9] text-sm sm:text-base leading-relaxed text-left font-normal">
+                            En el contexto colombiano, la demanda energética de edificaciones varía considerablemente según la zona climática. Las ciudades de clima cálido húmedo y cálido seco, como Barranquilla, Cartagena, Cali o Villavicencio, presentan altas demandas de refrigeración y ventilación, mientras que en ciudades de clima templado o frío, como Bogotá, Manizales o Pasto, la demanda de calefacción y control de humedad puede ser relevante. La Resolución 0549 de 2015 del MVCT clasifica el territorio colombiano en siete zonas climáticas y establece porcentajes mínimos de ahorro de energía del 10 % al 25 % respecto a una línea base, según el uso y la zona del proyecto. Comprender esta zonificación es esencial para que los gerentes de proyectos definan estrategias pertinentes y alcanzables, evitando la transferencia acrítica de soluciones diseñadas para climas europeos o norteamericanos (Ortiz, Castells & Sonnemann, 2010).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Diapositiva / Párrafo 2 -->
+                <div class="w-full flex-shrink-0 py-2 flex flex-col justify-center h-[330px]">
+                    <div class="card-item bg-[#1e293b] border-2 border-[#2dd4bf]/50 rounded-2xl p-6 sm:p-7 shadow-lg w-full flex items-center h-full overflow-y-auto">
+                        <p class="text-[#f1f5f9] text-sm sm:text-base leading-relaxed text-left font-normal">
+                            Durante la fase de construcción, las fuentes principales de consumo energético son el funcionamiento de maquinaria pesada, equipos eléctricos, iluminación provisional y el transporte de materiales y personal al sitio de obra. Aunque esta fase representa habitualmente entre el 3 % y el 8 % del total energético del ciclo de vida en edificaciones convencionales (Cabeza, Rincón, Vilariño, Pérez, & Castell, 2014), su correcta gestión puede reducir costos, emisiones y tiempos de ejecución. Para edificaciones de alta eficiencia donde la energía operacional se minimiza drásticamente, la fase de construcción y la energía incorporada cobran mayor importancia relativa.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Diapositiva / Párrafo 3 -->
+                <div class="w-full flex-shrink-0 py-2 flex flex-col justify-center h-[330px]">
+                    <div class="card-item bg-[#1e293b] border-2 border-[#2dd4bf]/50 rounded-2xl p-6 sm:p-7 shadow-lg w-full flex items-center h-full overflow-y-auto">
+                        <p class="text-[#f1f5f9] text-sm sm:text-base leading-relaxed text-left font-normal">
+                            Durante la fase de operación, los sistemas de mayor consumo energético en edificaciones comerciales e institucionales son la climatización (30–50 %), la iluminación (20–30 %), los equipos de oficina y de proceso (15–25 %), los ascensores y escaleras mecánicas (3–8 %) y los sistemas de agua caliente sanitaria (5–15 %), según la tipología y el clima (IEA, 2023; Pérez, Ortiz, & Pout, 2008). En vivienda, los patrones varían según el nivel de ingresos y la tecnología disponible, siendo la cocción, el calentamiento de agua y la refrigeración los principales vectores de consumo en el contexto colombiano. Conocer la distribución del consumo por sistema es el punto de partida para priorizar intervenciones de eficiencia con el mayor impacto potencial.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Navigation Controls (Tema Oscuro) -->
+        <div class="w-full flex items-center justify-between mt-5 px-2">
+            <button id="prevBtn" onclick="prevSlide()" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm border border-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Anterior
+            </button>
+
+            <span id="pageIndicator" class="text-sm font-semibold text-slate-400 tracking-wider">1 de 3</span>
+
+            <button id="nextBtn" onclick="nextSlide()" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-teal-600 text-white font-medium hover:bg-teal-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm">
+                Siguiente
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        const totalSlides = 3; // 3 párrafos en total
+
+        const track = document.getElementById('carouselTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const slideGroups = track.children;
+
+        function updateCarousel() {
+            const slideHeight = 330; // Altura exacta del contenedor de cada diapositiva
+            track.style.transform = `translateY(-${currentIndex * slideHeight}px)`;
+            
+            pageIndicator.textContent = `${currentIndex + 1} de ${totalSlides}`;
+
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === totalSlides - 1;
+
+            // Activar la animación de humo en la tarjeta actual
+            Array.from(slideGroups).forEach((group, index) => {
+                const card = group.querySelector('.card-item');
+                if (index === currentIndex) {
+                    card.classList.remove('active');
+                    void card.offsetWidth; // Forzar reflow
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        function nextSlide() {
+            if (currentIndex < totalSlides - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCarousel();
+        });
+    </script>
+
+</body>
+</html>
